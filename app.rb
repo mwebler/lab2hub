@@ -1,12 +1,34 @@
 require "octokit"
 require "gitlab"
 
-client = Octokit::Client.new(access_token: ENV["GITHUB_TOKEN"])
+hub = Octokit::Client.new(access_token: ENV["GITHUB_TOKEN"])
 
-puts client.user.inspect
+lab = Gitlab.client(endpoint: "https://gitlab.com/api/v4", private_token: ENV["GITLAB_TOKEN"])
 
-g = Gitlab.client(endpoint: "https://gitlab.com/api/v4", private_token: ENV["GITLAB_TOKEN"])
+GITLAB_REPO = "mwebler/issues"
 
-user = g.user
+issues = lab.issues(GITLAB_REPO, {per_page: 3})
 
-puts user.inspect
+issues.auto_paginate do |issue|
+    # hub.create_issue("mwebler/issues", issue.title, nil, {labels: "bug, todo, imported"})
+    puts("#{issue.id} - #{issue.title}")
+    puts("\n")
+    puts(issue.labels)
+    puts("\n")
+    puts(issue.state)
+    puts("\n")
+    puts(issue.description)
+    puts("\n")
+
+    comments = lab.issue_notes(issue.project_id, issue.iid)
+    comments.auto_paginate do |comment|
+        next if comment.system
+
+        puts("--- comment #{comment.id} ---\n")
+        puts(comment.body)
+        puts("\n")
+    end
+
+    puts("\n")
+    puts("\n")
+end
