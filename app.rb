@@ -7,7 +7,9 @@ lab = Gitlab.client(endpoint: "https://gitlab.com/api/v4", private_token: ENV["G
 
 GITLAB_REPO = "mwebler/issues"
 
-issues = lab.issues(GITLAB_REPO, {per_page: 3})
+GITLAB_MAX_PAGINATION=100
+
+issues = lab.issues(GITLAB_REPO, {per_page: GITLAB_MAX_PAGINATION})
 
 issues.auto_paginate do |issue|
     # hub.create_issue("mwebler/issues", issue.title, nil, {labels: "bug, todo, imported"})
@@ -20,7 +22,7 @@ issues.auto_paginate do |issue|
     puts(issue.description)
     puts("\n")
 
-    comments = lab.issue_notes(issue.project_id, issue.iid)
+    comments = lab.issue_notes(issue.project_id, issue.iid, {per_page: GITLAB_MAX_PAGINATION})
     comments.auto_paginate do |comment|
         next if comment.system
 
