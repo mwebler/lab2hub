@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Gitlab to Github - Copy your issues</title>
+    <style type="text/css">
+      body {
+        width: 50%;
+        background: white;
+      }
+      
+      input[type=text], select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-top: 6px;
+            margin-bottom: 16px;
+            resize: vertical
+        }
+
+        /* Style the submit button */
+        input[type=submit] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* When moving the mouse over the submit button, add a darker color */
+        input[type=submit]:hover {
+            background-color: #45a049;
+        }
+    </style>
+  </head>
+ 
+    <body>
+        <h1>Copy issues from Gitlab to Github!</h1>
+
+        <% if user_data[:gitlab_user] %>
+            <h3>Already authenticated as <%= user_data[:gitlab_user] %></h3>
+
+            <div style="width:200px">
+            <select form="form_copy" name="gitlab_repo">
+                <% user_data[:gitlab_repos].each do |repo| %>
+                    <option value="<%= repo[:id] %>"><%= repo[:name] %></option>
+                <% end %>
+            </select>
+            </div>
+        <% else %>
+            <form action="/auth/gitlab" method="GET">
+                <input type="submit" value="Authorize Gitlab" /></p>
+            </form>
+        <% end %>
+
+        <h3>Using test github repo and user</h3>
+
+        <form action="/copy" method="POST" id="form_copy">
+            <input type="submit" value="Copy issues to Github" /></p>
+        </form>
+
+        <h3><%= session %></h3>
+
+    </body>
+</html>
