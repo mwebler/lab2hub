@@ -49,19 +49,39 @@
                 <% end %>
             </select>
             </div>
+
+            <form action="/auth/gitlab" method="GET">
+                <input type="submit" value="Re-Authorize Gitlab" /></p>
+            </form>
         <% else %>
             <form action="/auth/gitlab" method="GET">
                 <input type="submit" value="Authorize Gitlab" /></p>
             </form>
         <% end %>
 
-        <h3>Using test github repo and user</h3>
+        
+        <% if user_data[:github_user] %>
+            <h3>Already authenticated as <%= user_data[:github_user] %></h3>
+
+            <div style="width:200px">
+            <select form="form_copy" name="github_repo">
+                <% user_data[:github_repos].each do |repo| %>
+                    <option value="<%= repo[:id] %>"><%= repo[:name] %></option>
+                <% end %>
+            </select>
+            </div>
+            <form action="/auth/github" method="GET">
+                <input type="submit" value="Re-Authorize Github" /></p>
+            </form>
+        <% else %>
+            <form action="/auth/github" method="GET">
+                <input type="submit" value="Authorize Github" /></p>
+            </form>
+        <% end %>
 
         <form action="/copy" method="POST" id="form_copy">
             <input type="submit" value="Copy issues to Github" /></p>
         </form>
-
-        <h3><%= session %></h3>
 
     </body>
 </html>

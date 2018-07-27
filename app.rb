@@ -66,7 +66,15 @@ get "/" do
     end
     if session[:github_token]
         hub = Octokit::Client.new(access_token: ENV["GITHUB_TOKEN"])
-        user_data[:github_user] = hub.user.username
+        user = hub.user
+        user_data[:github_user] = user.login
+        user_data[:github_repos] = []
+        hub.repos.each do |repo|
+            user_data[:github_repos].push({
+                id: repo.id,
+                name: repo.full_name
+            })
+        end
     end
     github_authenticated = true if session[:github_refresh_token]
     erb :index, {locals: {user_data: user_data} }
@@ -74,6 +82,10 @@ end
 
 get "/auth/gitlab" do
     redirect to("https://gitlab.com/oauth/authorize?client_id=#{ENV["GITLAB_APP_ID"]}&redirect_uri=http://localhost:4567/authorized-gitlab&response_type=code&state=MYSTATE")
+end
+
+get "/auth/github" do
+    redirect to("https://github.com/login/oauth/authorize?scope=repo&client_id=#{ENV["GITHUB_APP_ID"]}")
 end
 
 get "/authorized-gitlab" do
@@ -84,12 +96,26 @@ get "/authorized-gitlab" do
     redirect to("/")
 end
 
+get "/authorized-github" do
+    session_code = request.env["rack.request.query_hash"]["code"]
+
+    result = RestClient.post("https://github.com/login/oauth/access_token",
+                            {client_id: ENV["GITHUB_APP_ID"],
+                            client_secret: ENV["GITHUB_APP_SECRET"],
+                            code: session_code},
+                            accept: :json)
+
+    credentials = JSON.parse(result)
+    session[:github_token] = credentials["access_token"]
+    redirect to("/")
+end
+
 post "/copy" do
     gitlab_token = session[:gitlab_token]
-    github_token = ENV["GITHUB_TOKEN"]
+    github_token = session[:github_token]
 
-    gitlab_repo = params['gitlab_repo'].to_i
-    github_repo = "mwebler/issues"
+    gitlab_repo = params["gitlab_repo"].to_i
+    github_repo = params["github_repo"].to_i
     gitlab_to_github(gitlab_token, gitlab_repo, github_token, github_repo)
     "done"
 end
