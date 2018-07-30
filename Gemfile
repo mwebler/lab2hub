@@ -20,3 +20,9 @@ gem "sinatra", "~> 2.0"
 
 # Added at 2018-07-25 01:02:19 -0700 by matheus:
 gem "rest-client", "~> 2.0"
+
+# Added at 2018-07-29 23:59:20 -0700 by matheus:
+gem "rspec", "~> 3.7"
+
+# Added at 2018-07-30 00:25:24 -0700 by matheus:
+gem "webmock", "~> 3.4"
