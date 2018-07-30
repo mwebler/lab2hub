@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Gitlab to Github - Done!</title>
+    <style type="text/css">
+      .center-header {
+        margin: 0 auto;
+        width: 300px;
+        padding-bottom: 20px;
+        text-align: center;
+      }
+
+      table.minimalistBlack {
+        margin: 0 auto;
+        width: 300px; 
+        border: 3px solid #000000;
+        text-align: left;
+        border-collapse: collapse;
+      }
+      table.minimalistBlack td, table.minimalistBlack th {
+        border: 1px solid #000000;
+        padding: 5px 4px;
+      }
+      table.minimalistBlack tbody td {
+        font-size: 13px;
+      }
+      table.minimalistBlack thead {
+        background: #CFCFCF;
+        background: -moz-linear-gradient(top, #dbdbdb 0%, #d3d3d3 66%, #CFCFCF 100%);
+        background: -webkit-linear-gradient(top, #dbdbdb 0%, #d3d3d3 66%, #CFCFCF 100%);
+        background: linear-gradient(to bottom, #dbdbdb 0%, #d3d3d3 66%, #CFCFCF 100%);
+        border-bottom: 3px solid #000000;
+      }
+      table.minimalistBlack thead th {
+        font-size: 15px;
+        font-weight: bold;
+        color: #000000;
+        text-align: left;
+      }
+    </style>
+  </head>
+    <body>
+        <h3 class="center-header"><%= issue_list.length %> ISSUES COPIED</h3>
+        <table class="minimalistBlack">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+          <% issue_list.each do |issue| %>
+            <tr>
+              <td><a href="<%= issue[:url] %>" target="_blank"><%= "##{issue[:number]} - #{issue[:title]}" %></a></td>
+              <td><%= issue[:state] %></td>
+          <% end %>
+          </tbody>
+        </table>
+    </body>
+</html>
