@@ -1,8 +1,7 @@
 require "rest-client"
 
 class MyApp < Sinatra::Base
-
-    @@REDIRECT_URI="http://localhost:#{settings.port}/auth/gitlab/callback&response_type=code&state=MYSTATE"
+    @@REDIRECT_URI="#{ENV["APP_URL"].split(".").first}/auth/gitlab/callback&response_type=code&state=MYSTATE"
 
     # Redirect user to Gitlab OAuth authorization page
     get "/auth/gitlab" do
