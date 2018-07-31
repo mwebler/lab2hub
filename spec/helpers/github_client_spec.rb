@@ -1,5 +1,6 @@
 require "spec_helper"
 require "json"
+require "ostruct"
 require_relative "../../helpers/github_client"
 
 describe GithubClient do
@@ -9,12 +10,9 @@ describe GithubClient do
 
     describe ".get_username" do
         before do
-            stub_request(:get, "https://api.github.com/user").
-                with(headers: {Authorization: "token testtoken"}).
-                to_return(
-                    status: 200, 
-                    body: JSON.generate({login: "userhandle", id: 1, name: "User Test", email: "user@test.com" }), 
-                    headers: {"Content-Type": "application/json"})
+            allow_any_instance_of(Octokit::Client).to receive(:user).and_return(
+                OpenStruct.new({login: "userhandle", id: 1, name: "User Test", email: "user@test.com" })
+            )
         end
         it "returns the user github handle" do
             expect(@github.get_username).to eql("userhandle")
@@ -22,20 +20,37 @@ describe GithubClient do
     end
 
     describe ".get_repositories" do
-        before do
-            stub_request(:get, "https://api.github.com/user/repos").
-                with(query: {per_page: 100}).
-                to_return(
-                    status: 200,
-                    body: JSON.generate([{id: 9999, full_name: "userhandle/repo"}, {id: 5566, full_name: "org/another"}]),
-                    headers: {"Content-Type": "application/json", "X-GitHub-Media-Type": "github.v3; param=full; format=json"})
+        context "with 2 repositories" do
+            before do
+                allow_any_instance_of(Octokit::Client).to receive(:repos).and_return(
+                    [
+                        OpenStruct.new({id: 9999, full_name: "userhandle/repo"}),
+                        OpenStruct.new({id: 5566, full_name: "org/another"})
+                    ]
+                )
+
+                @repos = @github.get_repositories
+            end
+
+            it "finds 2 repositories" do
+                expect(@repos.size).to eql(2)
+            end
+
+            it "returns a list of repositories ids and full names (like org/repo or user/repo)" do
+                expect { |b| @repos.each(&b) }.to yield_successive_args({id: 9999, name: "userhandle/repo"}, {id: 5566, name: "org/another"})
+            end
         end
-        it "returns a list of repositories ids and full names (like org/repo or user/repo)" do
-            repos = @github.get_repositories
-            expect(repos).not_to be_empty
-            expect(repos.size).to eql(2)
-            puts repos.inspect
-            expect { |b| repos.each(&b)   }.to yield_successive_args({id: 9999, name: "userhandle/repo"}, {id: 5566, name: "org/another"})
+
+        context "with no repositories" do
+            before do
+                allow_any_instance_of(Octokit::Client).to receive(:repos).and_return([])
+
+                @repos = @github.get_repositories
+            end
+
+            it "gets an empty list of repositories" do
+                expect(@repos.size).to eql(0)
+            end
         end
     end
 end
