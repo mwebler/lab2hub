@@ -30,9 +30,9 @@ class GithubClient
             repository, issue[:title], issue[:description], {labels: issue[:labels].join(",")})
 
         # Add comments to the issue
-        issue[:comments].each {
-            |comment| @github.add_comment(repository, github_issue.number, comment)
-        }
+        issue[:comments].each do |comment|
+            @github.add_comment(repository, github_issue.number, comment)
+        end
 
         # Close issue if status is 'closed'
         github_issue = @github.close_issue(repository, github_issue.number) if issue[:isClosed]

@@ -1,5 +1,4 @@
 require "spec_helper"
-require "json"
 require "ostruct"
 require_relative "../../helpers/github_client"
 
