@@ -8,7 +8,7 @@ class MyApp < Sinatra::Base
     use Rack::Session::Cookie, {key: "rack.session",
         expire_after: 1800, # after 30 minutes
         secret: ENV["SESSION_SECRET"],
-        httponly: true }
+        httponly: true } unless test?
 
     configure do
       set :app_file, __FILE__

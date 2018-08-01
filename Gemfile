@@ -26,3 +26,6 @@ gem "rspec", "~> 3.7"
 
 # Added at 2018-07-30 00:25:24 -0700 by matheus:
 gem "webmock", "~> 3.4"
+
+# Added at 2018-07-31 19:38:51 -0700 by matheus:
+gem "rack-test", "~> 1.1"

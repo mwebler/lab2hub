@@ -13,6 +13,7 @@
 # it.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+ENV["RACK_ENV"] = "test"
 
 require "webmock/rspec"
 WebMock.disable_net_connect!(allow_localhost: true)
