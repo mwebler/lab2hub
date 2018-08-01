@@ -1,15 +1,17 @@
 require "rack/test"
 require_relative "../../app.rb"
+require_relative "./spec_helper"
 
 describe "Sinatra App main page" do
     include Rack::Test::Methods
+    include ClientStub
 
     def app
         MyApp.new
     end
 
     context "with no user authenticated authentication" do
-        before do
+        before(:all) do
             @response = get "/"
         end
 
@@ -24,13 +26,7 @@ describe "Sinatra App main page" do
 
     context "with user authenticated on gitlab" do
         before do
-            allow_any_instance_of(GitlabClient).to receive(:get_username)
-                .and_return("username")
-            allow_any_instance_of(GitlabClient).to receive(:get_repositories)
-                .and_return([
-                    {id: 12, name: "user/project-name"},
-                    {id: 123, name: "org/repository"}
-                ])
+            stub_gitlab_client
             @response = get "/", {}, "rack.session" => { gitlab_token: "gitlabtoken" }
         end
 
@@ -50,13 +46,7 @@ describe "Sinatra App main page" do
 
     context "with user authenticated on Github" do
         before do
-            allow_any_instance_of(GithubClient).to receive(:get_username)
-                .and_return("userhandle")
-            allow_any_instance_of(GithubClient).to receive(:get_repositories)
-                .and_return([
-                    {id: 12, name: "user/repo-name"},
-                    {id: 123, name: "organization/repo"}
-                ])
+            stub_github_client
             @response = get "/", {}, "rack.session" => { github_token: "githubtoken" }
         end
 
