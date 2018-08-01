@@ -35,7 +35,7 @@ describe "Sinatra App main page" do
         end
 
         it "displays gitlab authenticated user handle" do
-            expect(@response.body).to include("Already authenticated as username")
+            expect(@response.body).to include("Authenticated on Gitlab as username")
         end
 
         it "displays gitlab user project list select" do
@@ -55,7 +55,7 @@ describe "Sinatra App main page" do
         end
 
         it "displays github authenticated user handle" do
-            expect(@response.body).to include("Already authenticated as userhandle")
+            expect(@response.body).to include("Authenticated on Github as userhandle")
         end
 
         it "displays github user project list select" do

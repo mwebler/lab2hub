@@ -4,7 +4,7 @@
     <title>Gitlab to Github - Copy your issues</title>
     <style type="text/css">
       body {
-        width: 50%;
+        margin: 40px;
         background: white;
       }
       
@@ -17,6 +17,7 @@
             margin-top: 6px;
             margin-bottom: 16px;
             resize: vertical
+            margin: auto;
         }
 
         /* Style the submit button */
@@ -27,61 +28,100 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            margin: auto;
         }
 
         /* When moving the mouse over the submit button, add a darker color */
         input[type=submit]:hover {
             background-color: #45a049;
         }
+
+
+
+        .grid-container {
+            display: grid;
+            grid-column-gap: 50px;
+            grid-template-columns: auto auto;
+        }
+
+        .full-container {
+            grid-column-start: 1;
+            grid-column-end: 3;
+        }
+
+        .gitlab-container {
+            grid-column-start: 1;
+            grid-column-end: 2;
+        }
+
+        .github-container {
+            grid-column-start: 2;
+            grid-column-end: 3;
+        }
+
+        .centered {
+            margin: auto;
+        }
+
+
     </style>
   </head>
  
     <body>
-        <h1>Copy issues from Gitlab to Github!</h1>
+    <div class="grid-container">
+        <div class="full-container">
+            <h1 style="text-align: center">Copy issues from Gitlab to Github!</h1>
+        </div>
 
-        <% if user_data[:gitlab_user] %>
-            <h3>Already authenticated as <%= user_data[:gitlab_user] %></h3>
+        <div class="gitlab-container" style="margin: auto;">
+            <% if user_data[:gitlab_user] %>
+                <h3>Authenticated on Gitlab as <%= user_data[:gitlab_user] %></h3>
 
-            <div style="width:200px">
-            <select form="form_copy" name="gitlab_repo">
-                <% user_data[:gitlab_repos].each do |repo| %>
-                    <option value="<%= repo[:id] %>"><%= repo[:name] %></option>
-                <% end %>
-            </select>
-            </div>
+                <div style="width:200px">
+                <select form="form_copy" name="gitlab_repo">
+                    <% user_data[:gitlab_repos].each do |repo| %>
+                        <option value="<%= repo[:id] %>"><%= repo[:name] %></option>
+                    <% end %>
+                </select>
+                </div>
 
-            <form action="/auth/gitlab" method="GET">
-                <input type="submit" value="Re-Authorize Gitlab" /></p>
+                <form action="/auth/gitlab" method="GET">
+                    <input type="submit" value="Re-Authorize Gitlab" /></p>
+                </form>
+            <% else %>
+                <form action="/auth/gitlab" method="GET">
+                    <input type="submit" value="Authorize Gitlab" /></p>
+                </form>
+            <% end %>
+        </div>
+
+        <div class="github-container" style="margin: auto;">
+            <% if user_data[:github_user] %>
+                <h3>Authenticated on Github as <%= user_data[:github_user] %></h3>
+
+                <div style="width:200px">
+                <select form="form_copy" name="github_repo">
+                    <% user_data[:github_repos].each do |repo| %>
+                        <option value="<%= repo[:id] %>"><%= repo[:name] %></option>
+                    <% end %>
+                </select>
+                </div>
+                <form action="/auth/github" method="GET">
+                    <input type="submit" value="Re-Authorize Github" /></p>
+                </form>
+            <% else %>
+                <form action="/auth/github" method="GET">
+                    <input type="submit" value="Authorize Github" /></p>
+                </form>
+            <% end %>
+        </div>
+
+        <hr>
+        <div class="full-container" style="margin: auto;">
+            <form action="/copy" method="POST" id="form_copy">
+                <input type="submit" value="Copy issues to Github" /></p>
             </form>
-        <% else %>
-            <form action="/auth/gitlab" method="GET">
-                <input type="submit" value="Authorize Gitlab" /></p>
-            </form>
-        <% end %>
-
-        
-        <% if user_data[:github_user] %>
-            <h3>Already authenticated as <%= user_data[:github_user] %></h3>
-
-            <div style="width:200px">
-            <select form="form_copy" name="github_repo">
-                <% user_data[:github_repos].each do |repo| %>
-                    <option value="<%= repo[:id] %>"><%= repo[:name] %></option>
-                <% end %>
-            </select>
-            </div>
-            <form action="/auth/github" method="GET">
-                <input type="submit" value="Re-Authorize Github" /></p>
-            </form>
-        <% else %>
-            <form action="/auth/github" method="GET">
-                <input type="submit" value="Authorize Github" /></p>
-            </form>
-        <% end %>
-
-        <form action="/copy" method="POST" id="form_copy">
-            <input type="submit" value="Copy issues to Github" /></p>
-        </form>
-
+        </div>
+    </div>
     </body>
 </html>
