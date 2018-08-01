@@ -43,9 +43,11 @@ class GitlabClient
                 # ignore system notes (i.e. label added, closed/reopened)
                 next if comment.system
 
+                # unshift to create a list of comments in ascending order by creation/id
                 issue_to_copy[:comments].unshift(comment.body)
             end
 
+            # unshift to create a list of issues in ascending order by creation/id
             issues_list.unshift(issue_to_copy)
         end
 
