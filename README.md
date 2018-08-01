@@ -64,5 +64,7 @@ bundle exec rspec
 # Contributing
 For contributions, please check the [Contributions Guideline](CONTRIBUTIONS.md)
 
+A list of suggested improvements can be found [here](CONTRIBUTING.md#contribution-suggestions)
+
 # License
 lab2hub is licensed under the [MIT License](LICENSE)
