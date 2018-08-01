@@ -7,7 +7,7 @@ You can copy your issues in 3 simple steps:
 3. Select one of your Github repositories to copy the issues into.
 4. **Run it!** (this one is so simple it doesn't even count as a 4th step)
 
-**You can try a live version on Heroku: https://pacific-atoll-58088.herokuapp.com/**
+**Try the live version on Heroku: https://pacific-atoll-58088.herokuapp.com/**
 
 ## How it works
 The app uses OAuth to authenticate with both Gitlab and Github.
