@@ -31,7 +31,7 @@ describe "Sinatra App main page" do
         end
 
         it "displays gitlab re-authentication button" do
-            expect(@response.body).to include("Re-Authorize Gitlab")
+            expect(@response.body).to include("Re-Authenticate on Gitlab")
         end
 
         it "displays gitlab authenticated user handle" do
@@ -51,7 +51,7 @@ describe "Sinatra App main page" do
         end
 
         it "displays github re-authentication button" do
-            expect(@response.body).to include("Re-Authorize Github")
+            expect(@response.body).to include("Re-Authenticate on Github")
         end
 
         it "displays github authenticated user handle" do
