@@ -62,7 +62,7 @@ bundle exec rspec
 ```
 
 # Contributing
-For contributions, please check the [Contributions Guideline](CONTRIBUTIONS.md)
+For contributions, please check the [Contributions Guideline](CONTRIBUTING.md)
 
 A list of suggested improvements can be found [here](CONTRIBUTING.md#contribution-suggestions)
 
